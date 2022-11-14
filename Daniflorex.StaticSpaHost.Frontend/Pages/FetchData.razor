@@ -1,0 +1,76 @@
+﻿@page "/fetchdata"
+@implements IDisposable
+@using Daniflorex.StaticSpaHost.Shared
+@inject HttpClient Http
+@inject PersistentComponentState ApplicationState
+
+<PageTitle>Weather forecast</PageTitle>
+
+<h1>Weather forecast</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Temp. (C)</th>
+                <th>Temp. (F)</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in forecasts)
+            {
+                <tr>
+                    <td>@forecast.Date.ToShortDateString()</td>
+                    <td>@forecast.TemperatureC</td>
+                    <td>@forecast.TemperatureF</td>
+                    <td>@forecast.Summary</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private WeatherForecast[]? forecasts;
+
+    private PersistingComponentStateSubscription persistingSubscription;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //persisting state
+        persistingSubscription =
+            ApplicationState.RegisterOnPersisting(PersistData);
+
+        if (!ApplicationState.TryTakeFromJson<WeatherForecast[]?>("WeatherData", out var restored))
+        {
+            forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("https://localhost:44384/api/weatherforecast");
+        }
+        else
+        {
+            forecasts = restored!;
+        }
+
+        //forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("https://localhost:44384/api/weatherforecast");
+    }
+
+    private Task PersistData()
+    {
+        ApplicationState.PersistAsJson("WeatherData", forecasts);
+
+        return Task.CompletedTask;
+    }
+
+    void IDisposable.Dispose()
+    {
+        persistingSubscription.Dispose();
+    }
+}
