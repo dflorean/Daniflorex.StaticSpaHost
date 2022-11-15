@@ -40,27 +40,50 @@ else
 }
 
 @code {
+    [CascadingParameter]
+    public CascadingAppState AppState { get; set; }
+
     private WeatherForecast[]? forecasts;
 
     private PersistingComponentStateSubscription persistingSubscription;
 
     protected override async Task OnInitializedAsync()
     {
+        //loading at page change from shared component appstate
+        //if (!string.IsNullOrEmpty(AppState.WeatherData))
+        //{
+        //    forecasts = JsonSerializer.Deserialize<WeatherForecast[]?>(AppState.WeatherData);
+        //}
+
         //persisting state
         persistingSubscription =
             ApplicationState.RegisterOnPersisting(PersistData);
 
-        if (!ApplicationState.TryTakeFromJson<WeatherForecast[]?>("WeatherData", out var restored))
+        if (forecasts == null)
         {
-            forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("https://localhost:44384/api/weatherforecast");
+            if (!ApplicationState.TryTakeFromJson<WeatherForecast[]?>("WeatherData", out var restored))
+            {
+                forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("https://localhost:44384/api/weatherforecast");
+                Console.WriteLine($"Loaded from service");
+            }
+            else
+            {
+                forecasts = restored!;
+                Console.WriteLine($"Loaded from persisted component state");
+            }
         }
         else
         {
-            forecasts = restored!;
+            Console.WriteLine($"Loaded from cascading appstate");
         }
 
         //forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("https://localhost:44384/api/weatherforecast");
     }
+
+    //protected override bool ShouldRender()
+    //{
+    //    return fale;
+    //}
 
     private Task PersistData()
     {
@@ -72,5 +95,7 @@ else
     void IDisposable.Dispose()
     {
         persistingSubscription.Dispose();
+
+        AppState.WeatherData = JsonSerializer.Serialize(forecasts);
     }
 }

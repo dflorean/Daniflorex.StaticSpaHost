@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Daniflorex.StaticSpaHost.Fr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Daniflorex.StaticSpaHost.Shared", "Daniflorex.StaticSpaHost.Shared\Daniflorex.StaticSpaHost.Shared.csproj", "{3F4362B5-94CF-46EC-A800-59738C385997}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daniflorex.StaticSpaHost.SSR.Server", "Daniflorex.StaticSpaHost.SSR\Server\Daniflorex.StaticSpaHost.SSR.Server.csproj", "{9FE94839-B613-4A66-93AA-67EB99D9B30D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Daniflorex.StaticSpaHost.SSR.Server", "Daniflorex.StaticSpaHost.SSR\Server\Daniflorex.StaticSpaHost.SSR.Server.csproj", "{9FE94839-B613-4A66-93AA-67EB99D9B30D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

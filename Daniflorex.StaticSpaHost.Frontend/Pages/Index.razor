@@ -16,36 +16,76 @@ else
     @((MarkupString)cmsData.fields.text)
 }
 
-<a href="/fetchdata">Fetch data</a>
-
 <SurveyPrompt Title="How is Blazor working for you?" />
 
 
 @code {
+    [CascadingParameter]
+    public CascadingAppState AppState { get; set; }
+
     private Root? cmsData;
 
     private PersistingComponentStateSubscription persistingSubscription;
 
     protected override async Task OnInitializedAsync()
     {
+        //loading at page change from shared component appstat
+        //if (!string.IsNullOrEmpty(AppState.CmsData))
+        //{
+        //    cmsData = JsonSerializer.Deserialize<Root?>(AppState.CmsData);
+        //}
+
         //persisting state
         persistingSubscription =
             ApplicationState.RegisterOnPersisting(PersistData);
 
-        if (!ApplicationState.TryTakeFromJson<Root?>("CmsData", out var restored))
+        if (cmsData == null)
         {
-            cmsData = await Http.GetFromJsonAsync<Root>("https://localhost:44384/en/api/content/a88097c7-c966-48e9-9887-22b3f80440d6");
-        }
+            if (!ApplicationState.TryTakeFromJson<Root?>("CmsData", out var restored))
+            {
+                cmsData = await Http.GetFromJsonAsync<Root>("https://localhost:44384/en/api/content/a88097c7-c966-48e9-9887-22b3f80440d6");
+                Console.WriteLine($"Loaded from service");
+            }
+            else
+            {
+                cmsData = restored!;
+                Console.WriteLine($"Loaded from persisted component state");
+            }
+        }       
         else
         {
-            cmsData = restored!;
+            Console.WriteLine($"Loaded from cascading appstate");
         }
 
         //cmsData = await Http.GetFromJsonAsync<Root>("https://localhost:44384/en/api/content/a88097c7-c966-48e9-9887-22b3f80440d6");
+
+        //StateHasChanged();
+        //Console.WriteLine($"OnInitialized end: {restored}");
     }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        //ApplicationState.TryTakeFromJson<Root?>("CmsData", out var restored);
+        //StateHasChanged();
+        //Console.WriteLine($"OnParametersSet end: {restored}");
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        //ApplicationState.TryTakeFromJson<Root?>("CmsData", out var restored);
+        //StateHasChanged();
+        //Console.WriteLine($"OnAfterRender end: {restored}");
+    }
+
+    //protected override bool ShouldRender()
+    //{
+    //    return false;
+    //}
 
     private Task PersistData()
     {
+        Console.WriteLine($"Persisting data. {cmsData}");
+
         ApplicationState.PersistAsJson("CmsData", cmsData);
 
         return Task.CompletedTask;
@@ -54,31 +94,8 @@ else
     void IDisposable.Dispose()
     {
         persistingSubscription.Dispose();
-    }
 
-    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
-    public class Fields
-    {
-        public string title { get; set; }
-        public string text { get; set; }
-    }
-
-    public class Root
-    {
-        public System system { get; set; }
-        public Fields fields { get; set; }
-    }
-
-    public class System
-    {
-        public string id { get; set; }
-        public string name { get; set; }
-        public string urlSegment { get; set; }
-        public string type { get; set; }
-        public DateTime createdAt { get; set; }
-        public DateTime editedAt { get; set; }
-        public string contentType { get; set; }
-        public string locale { get; set; }
-        public object url { get; set; }
+        //persisting data in appstate to mantain between components
+        AppState.CmsData = JsonSerializer.Serialize(cmsData);
     }
 }

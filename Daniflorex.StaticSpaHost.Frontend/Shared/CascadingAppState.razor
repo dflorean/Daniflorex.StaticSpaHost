@@ -1,0 +1,39 @@
+﻿<CascadingValue Value="@this">
+    @ChildContent
+</CascadingValue>
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+
+    private string cmsData = "";
+    public string CmsData
+    {
+        get
+        {
+            return cmsData;
+        }
+
+        set
+        {
+            cmsData = value;
+            StateHasChanged();
+        }
+    }
+
+    private string weatherData = "";
+    public string WeatherData
+    {
+        get
+        {
+            return weatherData;
+        }
+
+        set
+        {
+            weatherData = value;
+            StateHasChanged();
+        }
+    }
+}

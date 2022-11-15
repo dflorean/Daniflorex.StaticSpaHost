@@ -1,7 +1,10 @@
-﻿<Router AppAssembly="@typeof(App).Assembly">
+﻿@inject NavigationManager NavigationManager;
+
+<Router AppAssembly="@typeof(App).Assembly" OnNavigateAsync="@OnNavigateAsync">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
         <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        @*<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation"></NavigationLock>*@
     </Found>
     <NotFound>
         <PageTitle>Not found</PageTitle>
@@ -10,3 +13,33 @@
         </LayoutView>
     </NotFound>
 </Router>
+
+@code
+{
+    protected override void OnInitialized()
+    {
+        NavigationManager.LocationChanged += HandleLocationChanged;
+    }
+
+    void HandleLocationChanged(object sender, LocationChangedEventArgs e)
+    {
+        string navigationMethod = e.IsNavigationIntercepted ? "HTML" : "code";
+
+        Console.WriteLine($"Notified of navigation via {navigationMethod} to {e.Location}");
+        NavigationManager.NavigateTo(e.Location, true);
+        //System.Diagnostics.Debug.WriteLine($"Notified of navigation via {navigationMethod} to {e.Location}");
+    }
+
+    private void OnNavigateAsync(NavigationContext args)
+    {
+        Console.WriteLine($"Notified of navigation to {args.Path}");
+        //NavigationManager.NavigateTo(args.Path, true);
+    }
+
+    //async Task OnBeforeInternalNavigation(LocationChangingContext context)
+    //{
+    //    context.PreventNavigation();
+    //    Console.WriteLine($"Notified of navigation to {context.TargetLocation}");
+    //    //NavigationManager.NavigateTo(context.TargetLocation)
+    //}
+}
