@@ -1,0 +1,27 @@
+﻿@inject NavigationManager NavigationManager;
+
+<Router AppAssembly="@typeof(App).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        <NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation"></NavigationLock>
+    </Found>
+    <NotFound>
+        <PageTitle>Not found</PageTitle>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p role="alert">Sorry, there's nothing at this address.</p>
+        </LayoutView>
+    </NotFound>
+</Router>
+
+@code
+{
+    async Task OnBeforeInternalNavigation(LocationChangingContext context)
+    {
+        context.PreventNavigation();
+        Console.WriteLine($"Notified of navigation to {context.TargetLocation}");
+        //NavigationManager.NavigateTo("fetchdata", true);
+    }
+
+
+}

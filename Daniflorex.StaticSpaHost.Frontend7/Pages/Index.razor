@@ -1,0 +1,95 @@
+﻿@page "/"
+@implements IDisposable
+@inject HttpClient Http
+@inject PersistentComponentState ApplicationState
+
+<PageTitle>Index</PageTitle>
+
+@if (cmsData == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <h1>@cmsData.fields.title</h1>
+
+    @((MarkupString)cmsData.fields.text)
+}
+
+<SurveyPrompt Title="How is Blazor working for you?" />
+
+
+@code {
+    private Root? cmsData;
+
+    private PersistingComponentStateSubscription persistingSubscription;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //loading at page change from shared component appstat
+        //if (!string.IsNullOrEmpty(AppState.CmsData))
+        //{
+        //    cmsData = JsonSerializer.Deserialize<Root?>(AppState.CmsData);
+        //}
+
+        //persisting state
+        persistingSubscription =
+            ApplicationState.RegisterOnPersisting(PersistData);
+
+        if (cmsData == null)
+        {
+            if (!ApplicationState.TryTakeFromJson<Root?>("CmsData", out var restored))
+            {
+                cmsData = await Http.GetFromJsonAsync<Root>("https://localhost:44384/en/api/content/a88097c7-c966-48e9-9887-22b3f80440d6");
+                Console.WriteLine($"Loaded from service");
+            }
+            else
+            {
+                cmsData = restored!;
+                Console.WriteLine($"Loaded from persisted component state");
+            }
+        }
+        else
+        {
+            Console.WriteLine($"Loaded from cascading appstate");
+        }
+
+        //cmsData = await Http.GetFromJsonAsync<Root>("https://localhost:44384/en/api/content/a88097c7-c966-48e9-9887-22b3f80440d6");
+
+        //StateHasChanged();
+        //Console.WriteLine($"OnInitialized end: {restored}");
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        //ApplicationState.TryTakeFromJson<Root?>("CmsData", out var restored);
+        //StateHasChanged();
+        //Console.WriteLine($"OnParametersSet end: {restored}");
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        //ApplicationState.TryTakeFromJson<Root?>("CmsData", out var restored);
+        //StateHasChanged();
+        //Console.WriteLine($"OnAfterRender end: {restored}");
+    }
+
+    //protected override bool ShouldRender()
+    //{
+    //    return false;
+    //}
+
+    private Task PersistData()
+    {
+        Console.WriteLine($"Persisting data. {cmsData}");
+
+        ApplicationState.PersistAsJson("CmsData", cmsData);
+
+        return Task.CompletedTask;
+    }
+
+    void IDisposable.Dispose()
+    {
+        persistingSubscription.Dispose();
+    }
+}
