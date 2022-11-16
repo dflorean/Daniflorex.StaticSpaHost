@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
 	  <BlazorWasmPrerenderingMode>WebAssemblyPrerendered</BlazorWasmPrerenderingMode>
+	  <BlazorWasmPrerenderingLocale>it-IT</BlazorWasmPrerenderingLocale>
   </PropertyGroup>
 
   <ItemGroup>
