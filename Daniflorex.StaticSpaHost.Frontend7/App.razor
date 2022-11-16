@@ -16,11 +16,27 @@
 
 @code
 {
+    //private bool firstNavigationAlreadyPrevented = false;
+
     async Task OnBeforeInternalNavigation(LocationChangingContext context)
     {
-        context.PreventNavigation();
-        Console.WriteLine($"Notified of navigation to {context.TargetLocation}");
-        //NavigationManager.NavigateTo("fetchdata", true);
+        //if (!firstNavigationAlreadyPrevented)
+        //{
+        //    context.PreventNavigation();
+        //    firstNavigationAlreadyPrevented = true;
+        //    Console.WriteLine($"Notified of navigation to {context.TargetLocation}");
+        //}
+        //else
+        //{
+        //    NavigationManager.NavigateTo(context, true);
+        //}        
+
+        if(context.IsNavigationIntercepted)
+        {
+            context.PreventNavigation();
+            Console.WriteLine($"Notified of navigation to {context.TargetLocation}");
+            NavigationManager.NavigateTo(context.TargetLocation, true);
+        }
     }
 
 
