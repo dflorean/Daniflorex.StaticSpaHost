@@ -37,8 +37,8 @@ steps:
 - script: dotnet publish $(Build.SourcesDirectory)/Daniflorex.StaticSpaHost.Backend/Daniflorex.StaticSpaHost.Backend.csproj -c $(buildConfiguration) -o publish-backend
   displayName: 'dotnet publish backend $(buildConfiguration)'
 
-- script: dotnet publish $(Build.SourcesDirectory)/Daniflorex.StaticSpaHost.Frontend/Daniflorex.StaticSpaHost.Frontend.csproj -c $(buildConfiguration) -o publish-frontend
-  displayName: 'dotnet publish frontend $(buildConfiguration)'
+# - script: dotnet publish $(Build.SourcesDirectory)/Daniflorex.StaticSpaHost.Frontend/Daniflorex.StaticSpaHost.Frontend.csproj -c $(buildConfiguration) -o publish-frontend
+#   displayName: 'dotnet publish frontend $(buildConfiguration)'
 
 - task: CopyFiles@2
   displayName: 'Copy published backend to artifacts'
@@ -47,12 +47,12 @@ steps:
     Contents: '**'
     TargetFolder: '$(Build.ArtifactStagingDirectory)/backend'
 
-- task: CopyFiles@2
-  displayName: 'Copy published frontend to artifacts'
-  inputs:
-    SourceFolder: '$(Build.SourcesDirectory)/publish-frontend'
-    Contents: '**'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)/frontend'
+# - task: CopyFiles@2
+#   displayName: 'Copy published frontend to artifacts'
+#   inputs:
+#     SourceFolder: '$(Build.SourcesDirectory)/publish-frontend'
+#     Contents: '**'
+#     TargetFolder: '$(Build.ArtifactStagingDirectory)/frontend'
     
 - task: PublishBuildArtifacts@1
   displayName: 'Publish backend artifacts'
@@ -61,9 +61,9 @@ steps:
     ArtifactName: 'drop-backend'
     publishLocation: 'Container'
   
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish frontend artifacts'
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop-frontend'
-    publishLocation: 'Container'
+# - task: PublishBuildArtifacts@1
+#   displayName: 'Publish frontend artifacts'
+#   inputs:
+#     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+#     ArtifactName: 'drop-frontend'
+#     publishLocation: 'Container'
