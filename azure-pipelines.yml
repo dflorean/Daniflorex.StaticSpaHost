@@ -24,9 +24,8 @@ steps:
     version: '6.0.x'
     includePreviewVersions: true
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
+- script: dotnet restore
+  displayName: 'dotnet restore nuget'
 
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build solution $(buildConfiguration)'
