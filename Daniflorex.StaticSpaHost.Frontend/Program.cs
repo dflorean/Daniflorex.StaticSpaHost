@@ -1,4 +1,5 @@
 using Daniflorex.StaticSpaHost.Frontend;
+using Daniflorex.StaticSpaHost.Frontend.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
@@ -22,5 +23,5 @@ await builder.Build().RunAsync();
 static void ConfigureServices(IServiceCollection services, string baseAddress)
 {
     services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseAddress) });
-    //services.AddScoped<IFoo, MyFoo>();
+    services.AddScoped<StaticPreRenderedComponentState>();
 }

@@ -1,7 +1,7 @@
 ﻿@page "/"
 @implements IDisposable
 @inject HttpClient Http
-@inject PersistentComponentState ApplicationState
+@inject StaticPreRenderedComponentState ComponentState
 
 <PageTitle>Index</PageTitle>
 
@@ -20,12 +20,11 @@ else
 
 
 @code {
-    [CascadingParameter]
-    public CascadingAppState AppState { get; set; }
-
     private Root? cmsData;
 
     private PersistingComponentStateSubscription persistingSubscription;
+
+    private const string persistentStoreKey = "index";
 
     protected override async Task OnInitializedAsync()
     {
@@ -37,21 +36,21 @@ else
 
         //persisting state
         persistingSubscription =
-            ApplicationState.RegisterOnPersisting(PersistData);
+            ComponentState.RegisterOnPersisting(PersistData);
 
         if (cmsData == null)
         {
-            if (!ApplicationState.TryTakeFromJson<Root?>("CmsData", out var restored))
-            {
-                cmsData = await Http.GetFromJsonAsync<Root>("https://localhost:44384/en/api/content/a88097c7-c966-48e9-9887-22b3f80440d6");
-                Console.WriteLine($"Loaded from service");
-            }
-            else
+            if (await ComponentState.TryTakeFromJsonAsync<Root?>(persistentStoreKey) is (true, var restored))
             {
                 cmsData = restored!;
                 Console.WriteLine($"Loaded from persisted component state");
             }
-        }       
+            else
+            {
+                cmsData = await Http.GetFromJsonAsync<Root>("https://localhost:44384/en/api/content/a88097c7-c966-48e9-9887-22b3f80440d6");
+                Console.WriteLine($"Loaded from service");
+            }
+        }
         else
         {
             Console.WriteLine($"Loaded from cascading appstate");
@@ -86,7 +85,7 @@ else
     {
         Console.WriteLine($"Persisting data. {cmsData}");
 
-        ApplicationState.PersistAsJson("CmsData", cmsData);
+        ComponentState.PersistAsJson(persistentStoreKey, cmsData);
 
         return Task.CompletedTask;
     }
@@ -94,8 +93,5 @@ else
     void IDisposable.Dispose()
     {
         persistingSubscription.Dispose();
-
-        //persisting data in appstate to mantain between components
-        AppState.CmsData = JsonSerializer.Serialize(cmsData);
     }
 }

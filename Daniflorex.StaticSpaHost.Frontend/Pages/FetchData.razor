@@ -1,8 +1,7 @@
 ﻿@page "/fetchdata"
 @implements IDisposable
-@using Daniflorex.StaticSpaHost.Shared
 @inject HttpClient Http
-@inject PersistentComponentState ApplicationState
+@inject StaticPreRenderedComponentState ComponentState
 
 <PageTitle>Weather forecast</PageTitle>
 
@@ -40,12 +39,11 @@ else
 }
 
 @code {
-    [CascadingParameter]
-    public CascadingAppState AppState { get; set; }
-
     private WeatherForecast[]? forecasts;
 
     private PersistingComponentStateSubscription persistingSubscription;
+
+    private const string persistentStoreKey = "fetchdata";
 
     protected override async Task OnInitializedAsync()
     {
@@ -57,19 +55,19 @@ else
 
         //persisting state
         persistingSubscription =
-            ApplicationState.RegisterOnPersisting(PersistData);
+            ComponentState.RegisterOnPersisting(PersistData);
 
         if (forecasts == null)
         {
-            if (!ApplicationState.TryTakeFromJson<WeatherForecast[]?>("WeatherData", out var restored))
-            {
-                forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("https://localhost:44384/api/weatherforecast");
-                Console.WriteLine($"Loaded from service");
-            }
-            else
+            if (await ComponentState.TryTakeFromJsonAsync<WeatherForecast[]>(persistentStoreKey) is (true, var restored))
             {
                 forecasts = restored!;
                 Console.WriteLine($"Loaded from persisted component state");
+            }
+            else
+            {
+                forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("https://localhost:44384/api/weatherforecast");
+                Console.WriteLine($"Loaded from service");
             }
         }
         else
@@ -87,7 +85,7 @@ else
 
     private Task PersistData()
     {
-        ApplicationState.PersistAsJson("WeatherData", forecasts);
+        ComponentState.PersistAsJson(persistentStoreKey, forecasts);
 
         return Task.CompletedTask;
     }
@@ -95,7 +93,5 @@ else
     void IDisposable.Dispose()
     {
         persistingSubscription.Dispose();
-
-        AppState.WeatherData = JsonSerializer.Serialize(forecasts);
     }
 }
