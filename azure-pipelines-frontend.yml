@@ -59,6 +59,6 @@ steps:
 - task: PublishBuildArtifacts@1
   displayName: 'Publish frontend artifacts'
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/frontend'
     ArtifactName: 'drop-frontend'
     publishLocation: 'Container'
