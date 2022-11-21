@@ -1,0 +1,64 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+steps:
+
+- task: UseDotNet@2
+  displayName: 'Install .NET 7'
+  inputs:
+    packageType: 'sdk'
+    version: '7.0.x'
+  
+- task: UseDotNet@2
+  displayName: 'Install .NET 6'
+  inputs:
+    packageType: 'sdk'
+    version: '6.0.x'
+
+- script: dotnet restore
+  displayName: 'dotnet restore nuget'
+
+- script: dotnet build --configuration $(buildConfiguration)
+  displayName: 'dotnet build solution $(buildConfiguration)'
+  
+# - script: dotnet publish $(Build.SourcesDirectory)/Daniflorex.StaticSpaHost.Backend/Daniflorex.StaticSpaHost.Backend.csproj -c $(buildConfiguration) -o publish-backend
+#   displayName: 'dotnet publish backend $(buildConfiguration)'
+
+- script: dotnet publish $(Build.SourcesDirectory)/Daniflorex.StaticSpaHost.Frontend/Daniflorex.StaticSpaHost.Frontend.csproj -c $(buildConfiguration) -o publish-frontend
+  displayName: 'dotnet publish frontend $(buildConfiguration)'
+
+# - task: CopyFiles@2
+#   displayName: 'Copy published backend to artifacts'
+#   inputs:
+#     SourceFolder: '$(Build.SourcesDirectory)/publish-backend'
+#     Contents: '**'
+#     TargetFolder: '$(Build.ArtifactStagingDirectory)/backend'
+
+- task: CopyFiles@2
+  displayName: 'Copy published frontend to artifacts'
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)/publish-frontend'
+    Contents: '**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/frontend'
+    
+# - task: PublishBuildArtifacts@1
+#   displayName: 'Publish backend artifacts'
+#   inputs:
+#     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+#     ArtifactName: 'drop-backend'
+#     publishLocation: 'Container'
+  
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish frontend artifacts'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop-frontend'
+    publishLocation: 'Container'
