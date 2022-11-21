@@ -15,14 +15,18 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-#- task: NuGetToolInstaller@1
 
 - task: UseDotNet@2
-  displayName: 'Use .NET Core sdk'
+  displayName: 'Install .NET 7'
   inputs:
     packageType: 'sdk'
     version: '7.0.x'
-    includePreviewVersions: true
+  
+- task: UseDotNet@2
+  displayName: 'Install .NET 6'
+  inputs:
+    packageType: 'sdk'
+    version: '6.0.x'
 
 - script: dotnet restore
   displayName: 'dotnet restore nuget'
@@ -37,24 +41,28 @@ steps:
   displayName: 'dotnet publish frontend $(buildConfiguration)'
 
 - task: CopyFiles@2
+  displayName: 'Copy published backend to artifacts'
   inputs:
     SourceFolder: '$(Build.SourcesDirectory)/publish-backend'
     Contents: '**'
     TargetFolder: '$(Build.ArtifactStagingDirectory)/backend'
 
 - task: CopyFiles@2
+  displayName: 'Copy published frontend to artifacts'
   inputs:
     SourceFolder: '$(Build.SourcesDirectory)/publish-frontend'
     Contents: '**'
     TargetFolder: '$(Build.ArtifactStagingDirectory)/frontend'
     
 - task: PublishBuildArtifacts@1
+  displayName: 'Publish backend artifacts'
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop-backend'
     publishLocation: 'Container'
   
 - task: PublishBuildArtifacts@1
+  displayName: 'Publish frontend artifacts'
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop-frontend'
