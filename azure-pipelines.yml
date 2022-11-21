@@ -30,10 +30,10 @@ steps:
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build solution $(buildConfiguration)'
   
-- script: dotnet publish . -c $(buildConfiguration) -o publish-backend -p $(Build.SourcesDirectory)/Daniflorex.StaticSpaHost.Backend/Daniflorex.StaticSpaHost.Backend.csproj
+- script: dotnet publish $(Build.SourcesDirectory)/Daniflorex.StaticSpaHost.Backend/Daniflorex.StaticSpaHost.Backend.csproj -c $(buildConfiguration) -o publish-backend
   displayName: 'dotnet publish backend $(buildConfiguration)'
 
-- script: dotnet publish . -c $(buildConfiguration) -o publish-frontend -p $(Build.SourcesDirectory)/Daniflorex.StaticSpaHost.Frontend/Daniflorex.StaticSpaHost.Frontend.csproj
+- script: dotnet publish $(Build.SourcesDirectory)/Daniflorex.StaticSpaHost.Frontend/Daniflorex.StaticSpaHost.Frontend.csproj -c $(buildConfiguration) -o publish-frontend
   displayName: 'dotnet publish frontend $(buildConfiguration)'
 
 - task: CopyFiles@2
