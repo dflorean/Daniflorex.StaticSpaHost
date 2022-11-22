@@ -66,7 +66,7 @@ else
             }
             else
             {
-                forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("https://localhost:44384/api/weatherforecast");
+                forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("https://staticspa-demo.azurewebsites.net/api/weatherforecast");
                 Console.WriteLine($"Loaded from service");
             }
         }

@@ -34,6 +34,8 @@ else
         //    cmsData = JsonSerializer.Deserialize<Root?>(AppState.CmsData);
         //}
 
+        Console.WriteLine($"Base address: {Http.BaseAddress}");
+
         //persisting state
         persistingSubscription =
             ComponentState.RegisterOnPersisting(PersistData);
@@ -47,7 +49,7 @@ else
             }
             else
             {
-                cmsData = await Http.GetFromJsonAsync<Root>("https://localhost:44384/en/api/content/a88097c7-c966-48e9-9887-22b3f80440d6");
+                cmsData = await Http.GetFromJsonAsync<Root>("https://staticspa-demo.azurewebsites.net/en/api/content/a88097c7-c966-48e9-9887-22b3f80440d6");
                 Console.WriteLine($"Loaded from service");
             }
         }

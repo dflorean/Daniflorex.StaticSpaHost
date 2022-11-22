@@ -11,7 +11,10 @@ if (!builder.RootComponents.Any())
 }
 
 //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-ConfigureServices(builder.Services, builder.HostEnvironment.BaseAddress);
+//ConfigureServices(builder.Services, builder.HostEnvironment.BaseAddress);
+
+var baseAddress = builder.Configuration.GetValue<string>("BaseUrl");
+ConfigureServices(builder.Services, baseAddress);
 
 await builder.Build().RunAsync();
 

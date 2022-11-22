@@ -34,7 +34,7 @@ namespace Daniflorex.StaticSpaHost.Backend
                     options.AddPolicy("AllowBackend",
                         builder => builder
                         .SetIsOriginAllowed((host) => true)
-                        .WithOrigins("https://localhost:44384", "https://staticspa-demo.scm.azurewebsites.net").AllowAnyMethod().AllowAnyHeader());
+                        .WithOrigins("https://localhost:44384", "https://staticspademo.z13.web.core.windows.net").AllowAnyMethod().AllowAnyHeader());
 
                     //options.AddPolicy("AllowDashboardOrigin",
                     //             builder => builder.SetIsOriginAllowed((host) => true).AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());

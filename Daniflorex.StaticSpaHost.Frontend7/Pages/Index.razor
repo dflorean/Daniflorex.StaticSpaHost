@@ -40,7 +40,7 @@ else
         {
             if (!ApplicationState.TryTakeFromJson<Root?>("CmsData", out var restored))
             {
-                cmsData = await Http.GetFromJsonAsync<Root>("https://localhost:44384/en/api/content/a88097c7-c966-48e9-9887-22b3f80440d6");
+                cmsData = await Http.GetFromJsonAsync<Root>("/en/api/content/a88097c7-c966-48e9-9887-22b3f80440d6");
                 Console.WriteLine($"Loaded from service");
             }
             else
