@@ -3,6 +3,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <UserSecretsId>4549b588-adfe-4f01-a4d9-3e0f70dab16f</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="Pages\_Host.cshtml" />
@@ -25,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="umbraco\Data\Umbraco.sqlite.db" CopyToPublishDirectory="Always"/>
+    <None Include="umbraco\Data\Umbraco.sqlite.db" CopyToPublishDirectory="Always" />
   </ItemGroup>
 
   <PropertyGroup>
@@ -40,3 +41,4 @@
   </PropertyGroup>
 
 </Project>
+<!---->

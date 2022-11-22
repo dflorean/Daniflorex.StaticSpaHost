@@ -44,6 +44,7 @@ namespace Daniflorex.StaticSpaHost.Backend
                 .AddBackOffice()
                 .AddWebsite()
                 .AddComposers()
+                .AddTriggerBuildNotifications()
                 .Build();
         }
 
@@ -57,6 +58,7 @@ namespace Daniflorex.StaticSpaHost.Backend
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                
             }
 
             app.UseCors("AllowBackend")

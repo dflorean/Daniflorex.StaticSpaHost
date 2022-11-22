@@ -13,6 +13,12 @@ public class TriggerFrontendBuild :
     INotificationHandler<ContentMovedNotification>,
     INotificationHandler<ContentMovedToRecycleBinNotification>
 {
+    private readonly IConfiguration _config;
+    public TriggerFrontendBuild(IConfiguration config)
+    {
+        _config = config;
+    }
+
     public async void Handle(ContentPublishedNotification notification)
     {
         await TriggerBuild();
@@ -41,9 +47,19 @@ public class TriggerFrontendBuild :
     private async Task TriggerBuild()
     {
         string organization = "azureadmin0382";
-        string project = "Umbraco9Headless-Test";
-        int pipelineId = 19;
-        string azurePersonalAccessToken = "mkxhzfwxhaswevhcc3xo3rztivpy2z4jrjb2tv43b6rkzhkzq5fa";
+        string project = "StaticSpaHost";
+        int pipelineId = 28;
+        
+        string azurePersonalAccessToken = _config["BuildPipelinePersonalAccessToken"];
+        //bool isDevelopment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
+        //if (isDevelopment)
+        //{
+        //    azurePersonalAccessToken = _config["BuildPipelinePersonalAccessToken"];
+        //}   
+        //else
+        //{
+        //    azurePersonalAccessToken = 
+        //}
 
         string baseUrl = $"https://dev.azure.com/{organization}/{project}/_apis/pipelines/{pipelineId}/runs?api-version=6.0-preview.1";
 
