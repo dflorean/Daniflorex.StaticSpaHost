@@ -34,7 +34,7 @@ steps:
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build solution $(buildConfiguration)'
   
-- script: dotnet publish $(Build.SourcesDirectory)/Daniflorex.StaticSpaHost.Backend/Daniflorex.StaticSpaHost.Backend.csproj -- $(BuildPipelinePersonalAccessToken) -c $(buildConfiguration) -o publish-backend
+- script: dotnet publish $(Build.SourcesDirectory)/Daniflorex.StaticSpaHost.Backend/Daniflorex.StaticSpaHost.Backend.csproj -c $(buildConfiguration) -o publish-backend
   displayName: 'dotnet publish backend $(buildConfiguration)'
 
 # - script: dotnet publish $(Build.SourcesDirectory)/Daniflorex.StaticSpaHost.Frontend/Daniflorex.StaticSpaHost.Frontend.csproj -c $(buildConfiguration) -o publish-frontend
