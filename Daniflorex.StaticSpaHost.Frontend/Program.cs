@@ -11,11 +11,6 @@ if (!builder.RootComponents.Any())
     builder.RootComponents.Add<HeadOutlet>("head::after");
 }
 
-//builder.RootComponents.Add<App>("#app");
-//builder.RootComponents.Add<HeadOutlet>("head::after");
-
-//builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-
 if (builder.HostEnvironment.IsDevelopment())
 {
     ConfigureServices(builder.Services, "https://localhost:44384");

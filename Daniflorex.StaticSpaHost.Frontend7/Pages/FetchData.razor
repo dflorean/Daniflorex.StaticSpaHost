@@ -77,11 +77,6 @@ else
         //forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("https://localhost:44384/api/weatherforecast");
     }
 
-    //protected override bool ShouldRender()
-    //{
-    //    return fale;
-    //}
-
     private Task PersistData()
     {
         ApplicationState.PersistAsJson("WeatherData", forecasts);

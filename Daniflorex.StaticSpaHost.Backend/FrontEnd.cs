@@ -17,7 +17,6 @@ public class FrontEndBuild : IHostedService
     private readonly Uri _webhookUrl;
     private readonly Dictionary<string, string> _headers;
     private readonly string _body;
-    //private readonly IContentService _contentService;
 
     public FrontEndBuild(ILogger<FrontEndBuild> logger, IConfiguration configuration)
     {
@@ -42,53 +41,11 @@ public class FrontEndBuild : IHostedService
             return Task.CompletedTask;
         }
 
-        //replaced in umbraco 9 with ContentService-Notifications
-        //ContentService.Deleted += TriggerBuild;
-        //ContentService.Moved += TriggerBuild;
-        //ContentService.Published += TriggerBuild;
-        //ContentService.Trashed += TriggerBuild;
-        //ContentService.Unpublished += TriggerBuild;
-
         _logger.LogInformation("Initializing Front-end build trigger with:\r\n    URI: {uri}\r\n    Headers: {headers}\r\n    Body: {body}", _webhookUrl, _headers, _body);
 
         return Task.CompletedTask;
     }
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
-
-//    public static async Task InitiatePipeline(CancellationToken cancellationToken = default)
-//    {
-//        using (HttpClient client = new HttpClient())
-//        {
-//            client.DefaultRequestHeaders.Accept.Clear();
-//            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-//            var token = Convert.ToBase64String(System.Text.ASCIIEncoding.ASCII.GetBytes(string.Format("{0}:{1}", "", AppSettings.DevOpsPAT)));
-//            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", token);
-
-//            var repoGuid = "Put GUID Here"; // You can get GUID for repo from the URL when you select the rpo of interest under  Repos is Project Settings
-//            var bodyJson = @"{
-//    ""parameters"": {
-//        ""parameterName"": ""parameterValue""
-//    },
-//    ""variables"": {},
-//    ""resources"": {
-//        ""repositories"": {
-//            ""self"": {
-//                ""repository"": {
-//                    ""id"": """ + repoGuid + @""",
-//                    ""type"": ""azureReposGit""
-//                },
-//                ""refName"": ""refs/heads/master""
-//            }
-//        }
-//    }
-//}";
-
-//            var bodyContent = new StringContent(bodyJson, Encoding.UTF8, "application/json");
-//            var pipeLineId = 61; // Can get this from URL when you open the pipeline of interest in Azure DevOps
-//            var response = await client.PostAsync($"https://dev.azure.com/ORG_NAME/PROJECT_NAME/_apis/pipelines/{pipeLineId}/runs?api-version=6.0-preview.1", bodyContent, cancellationToken);
-//            response.EnsureSuccessStatusCode();
-//        }
-//    }
 
     private async void TriggerBuild(object sender, EventArgs e)
     {

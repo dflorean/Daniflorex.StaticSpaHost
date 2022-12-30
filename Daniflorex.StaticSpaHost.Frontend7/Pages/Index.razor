@@ -53,31 +53,7 @@ else
         {
             Console.WriteLine($"Loaded from cascading appstate");
         }
-
-        //cmsData = await Http.GetFromJsonAsync<Root>("https://localhost:44384/en/api/content/a88097c7-c966-48e9-9887-22b3f80440d6");
-
-        //StateHasChanged();
-        //Console.WriteLine($"OnInitialized end: {restored}");
     }
-
-    protected override async Task OnParametersSetAsync()
-    {
-        //ApplicationState.TryTakeFromJson<Root?>("CmsData", out var restored);
-        //StateHasChanged();
-        //Console.WriteLine($"OnParametersSet end: {restored}");
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        //ApplicationState.TryTakeFromJson<Root?>("CmsData", out var restored);
-        //StateHasChanged();
-        //Console.WriteLine($"OnAfterRender end: {restored}");
-    }
-
-    //protected override bool ShouldRender()
-    //{
-    //    return false;
-    //}
 
     private Task PersistData()
     {
