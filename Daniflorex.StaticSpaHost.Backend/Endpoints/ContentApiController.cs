@@ -24,12 +24,6 @@ public class ContentApiController : UmbracoApiController
     [HttpGet("{id:guid}")]
     public IActionResult Get(Guid id)
     {
-        //if (!string.IsNullOrEmpty(language))
-        //{
-        //    System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(language);
-        //    System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(language);
-        //}
-
         var content = _publishedContent.Content(id);
         return Ok(_contentResolver.Value.ResolveContent(content));
     }

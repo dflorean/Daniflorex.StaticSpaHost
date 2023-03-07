@@ -36,12 +36,6 @@ public class DataController : Controller
     [HttpGet, Route("content")]
     public IEnumerable<IDictionary<string, object>> Content()
     {
-        //if (!string.IsNullOrEmpty(language))
-        //{
-        //    System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(language);
-        //    System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(language);
-        //}
-
         _logger.LogInformation("Received GetContent call");
 
         var templates = _fileService.GetTemplates().ToDictionary(x => x.Id, x => x.Alias);
